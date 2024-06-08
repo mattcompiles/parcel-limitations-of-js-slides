@@ -15,18 +15,19 @@
 <style scoped>
 .two-col-header {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: 50px auto;
   align-items: center;
 }
 
 .col-header {
-  grid-area: 1 / 1 / 2 / 3;
+  grid-area: 1 / 1 / 1 / 2;
 }
 .col-left {
-  grid-area: 2 / 1 / 3 / 2;
+  grid-area: 2 / 1 / 2 / 1;
 }
 .col-right {
-  grid-area: 2 / 2 / 3 / 3;
+  grid-area: 2 / 2 / 2 / 2;
 }
 </style>
