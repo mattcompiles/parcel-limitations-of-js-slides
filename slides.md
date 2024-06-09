@@ -156,7 +156,7 @@ layout: two-col-header
 
 ::right::
 
-<span class="-mt-16 block">
+<span class="-mt-16 Gblock">
 
 ```js {0|1-10|12-16|18-22|24|all}
 let moduleStore = {};
@@ -726,3 +726,514 @@ class: "flex items-center text-center"
 ---
 
 # What if we cache the cache write?
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block
+columns 3
+0 1 2
+end
+block
+columns 3
+3 4 5
+end
+block
+columns 3
+6 7 8
+end
+space:3
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block
+columns 3
+3 4 5
+end
+block
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+
+nodesA --> a
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+
+nodesA --> a
+nodesB --> b
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+class nodesA check
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+class nodesA valid
+class nodesB check
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+class nodesA,nodesB valid
+class nodesC check
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+class nodesA,nodesB,nodesC valid
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+space
+c["chunk-file-c"]
+
+nodesA --> a
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+classDef invalid stroke:#ef4444;
+class 5 invalid
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+space
+c["chunk-file-c"]
+
+nodesA --> a
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+classDef invalid stroke:#ef4444;
+class 5 invalid
+class nodesA check
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+space
+c["chunk-file-c"]
+
+nodesA --> a
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+classDef invalid stroke:#ef4444;
+class 5 invalid
+class nodesA valid
+class nodesB check
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+classDef invalid stroke:#ef4444;
+class nodesA,nodesB valid
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+classDef invalid stroke:#ef4444;
+class nodesA,nodesB valid
+class nodesC check
+```
+
+---
+layout: header
+contentClass: "text-center"
+---
+
+# Incremental cache writing
+
+::content::
+
+```mermaid
+block-beta
+columns 3
+block:nodesA
+columns 3
+0 1 2
+end
+block:nodesB
+columns 3
+3 4 5
+end
+block:nodesC
+columns 3
+6 7 8
+end
+space:3
+a["chunk-file-a"]
+b["chunk-file-b"]
+c["chunk-file-c"]
+
+nodesA --> a
+nodesB --> b
+nodesC --> c
+
+classDef check stroke:#facc15;
+classDef valid stroke:#22c55e;
+classDef invalid stroke:#ef4444;
+class nodesA,nodesB,nodesC valid
+```
