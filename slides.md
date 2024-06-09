@@ -393,14 +393,14 @@ block-beta
 columns 5
 entry["entry.js"] async["async.js"] react["react.js"] space:2
 space:5
-A["0"] B["0"] C["1"] space result["1"]
+A["0"] B["1"] C["1"] space result["3"]
 entry --> A
 async --> B
 react --> C
 C --> result
 
 classDef on fill:#696;
-class react,C on
+class react,C,async,B on
 ```
 
 ::right::
@@ -453,3 +453,276 @@ layout: two-col
 - Do the same work, but smarter
 - <span v-mark="{at: 1, type: 'circle'}">Don't repeat work you've already done</span>
 - Do multiple things at once
+
+---
+layout: center
+---
+
+# Caching
+
+A computed result that can be saved for later
+
+---
+layout: center
+---
+
+# Caching requires
+
+- A way to identify a piece of work
+- A list of things of that could force that work to be invalidated
+
+---
+layout: two-col
+---
+
+# Requests
+
+::right::
+
+- Unique identifier
+- Can be assigned invalidations
+  - files being updating/delete/created
+  - environment vars changing
+  - options changing
+  - etc
+- Can have sub-requests
+
+---
+layout: header
+---
+
+# Request types
+
+::content::
+
+|                    |                                                                  |
+| ------------------ | ---------------------------------------------------------------- |
+| AssetGraphRequest  | Create an AssetGraph                                             |
+| AssetRequest       | Load a file, transform it and return an Asset                    |
+| PathRequest        | Resolve a dependency/import to a file                            |
+| BundleGraphRequest | Run bundling algorithm, tree shaking, etc. Returns a BundleGraph |
+| PackageRequest     | Render a bundle to string and run optimizations on it            |
+| etc                |                                                                  |
+
+---
+layout: center
+---
+
+```mermaid
+flowchart TB
+entry.js --> react.js
+entry.js --> async.js
+async.js --> react.js
+async.js --> async.css
+```
+
+---
+layout: header
+---
+
+## Requests
+
+::content::
+
+```mermaid
+flowchart LR
+AssetGraphRequest
+```
+
+---
+layout: header
+---
+
+## Requests
+
+::content::
+
+```mermaid
+flowchart LR
+AssetGraphRequest --> entry["AssetRequest(entry.js)"]
+AssetGraphRequest --> react["AssetRequest(react.js)"]
+AssetGraphRequest --> async["AssetRequest(async.js)"]
+AssetGraphRequest --> async-css["AssetRequest(async.css)"]
+```
+
+---
+layout: header
+---
+
+## Requests
+
+::content::
+
+```mermaid
+flowchart LR
+subgraph Requests
+AssetGraphRequest --> entry["AssetRequest(entry.js)"]
+AssetGraphRequest --> react["AssetRequest(react.js)"]
+AssetGraphRequest --> async["AssetRequest(async.js)"]
+AssetGraphRequest --> async-css["AssetRequest(async.css)"]
+end
+
+subgraph Invalidations
+jt([js-transformer])
+ct([css-transformer])
+
+entry .-> jt
+react .-> jt
+async .-> jt
+async-css .-> ct
+end
+```
+
+---
+layout: header
+---
+
+## Requests
+
+::content::
+
+```mermaid
+flowchart LR
+subgraph Requests
+AssetGraphRequest --> entry["AssetRequest(entry.js)"]
+AssetGraphRequest --> react["AssetRequest(react.js)"]
+AssetGraphRequest --> async["AssetRequest(async.js)"]
+AssetGraphRequest --> async-css["AssetRequest(async.css)"]
+end
+
+subgraph Invalidations
+jt([js-transformer])
+ct([css-transformer])
+
+entry .-> jt
+react .-> jt
+async .-> jt
+async-css .-> ct
+end
+
+classDef invalid fill:#ef4444;
+class jt invalid
+```
+
+---
+layout: header
+---
+
+## Requests
+
+::content::
+
+```mermaid
+flowchart LR
+subgraph Requests
+AssetGraphRequest --> entry["AssetRequest(entry.js)"]
+AssetGraphRequest --> react["AssetRequest(react.js)"]
+AssetGraphRequest --> async["AssetRequest(async.js)"]
+AssetGraphRequest --> async-css["AssetRequest(async.css)"]
+end
+
+subgraph Invalidations
+jt([js-transformer])
+ct([css-transformer])
+
+entry .-> jt
+react .-> jt
+async .-> jt
+async-css .-> ct
+end
+
+classDef invalid fill:#ef4444;
+class jt,entry,react,async invalid
+```
+
+---
+layout: header
+---
+
+## Requests
+
+::content::
+
+```mermaid
+flowchart LR
+subgraph Requests
+AssetGraphRequest --> entry["AssetRequest(entry.js)"]
+AssetGraphRequest --> react["AssetRequest(react.js)"]
+AssetGraphRequest --> async["AssetRequest(async.js)"]
+AssetGraphRequest --> async-css["AssetRequest(async.css)"]
+end
+
+subgraph Invalidations
+jt([js-transformer])
+ct([css-transformer])
+
+entry .-> jt
+react .-> jt
+async .-> jt
+async-css .-> ct
+end
+
+classDef invalid fill:#ef4444;
+class jt,entry,react,async,AssetGraphRequest invalid
+```
+
+---
+layout: center
+---
+
+```js {1,11|1,11,2|1,11,3,10|1,11,3,10,4-6|1,11,3,10,4,8-9|all}
+requestTracker.runRequest({
+  id: hash(filePath, targetEnvironment),
+  run: (api) => {
+    // assign invalidations
+    api.invalidateOnFileChange(filePath);
+    api.invalidateOnEnvChange("NODE_ENV");
+
+    // run sub-request, could be cached
+    let subResult = api.runRequest(createSubrequest());
+  },
+});
+```
+
+---
+layout: two-col
+---
+
+# What about persistence?
+
+::right::
+
+```js {none|1-4,16|1-4,16,5-9|1-4,16,11-16|all}
+import v8 from "v8";
+import fs from "fs/promises";
+
+class RequestTracker {
+  async writeToCache() {
+    let buffer = v8.serialize(this.graph);
+
+    await fs.writeFile("da-cache", buffer);
+  }
+
+  static async readFromCache() {
+    let buffer = await fs.readFile("da-cache");
+    let graph = v8.deserialize(buffer);
+
+    return new RequestTracker(graph);
+  }
+}
+```
+
+---
+layout: center
+---
+
+# Serialization can be slow on large apps 🤔
+
+---
+layout: image
+image: "./thinking.jpeg"
+backgroundPosition: "left"
+class: "flex items-center text-center"
+---
+
+# What if we cache the cache write?
