@@ -1,12 +1,20 @@
+<script setup lang="ts">
+const props = defineProps({
+  columnClass: {
+    type: String,
+  },
+});
+</script>
+
 <template>
   <div class="slidev-layout two-col-header w-full h-full">
     <div class="col-header">
       <slot />
     </div>
-    <div class="col-left">
+    <div class="col-left" :class="columnClass">
       <slot name="left" />
     </div>
-    <div class="col-right">
+    <div class="col-right" :class="columnClass">
       <slot name="right" />
     </div>
   </div>

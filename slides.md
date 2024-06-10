@@ -1298,9 +1298,208 @@ async function run() {
 
 ```js {all|1|2|all}{at:1}
 // worker.js
-export function runTransform(filePath) {
+export async function runTransform(filePath) {
   // Do CPU intensive work...
 
   return result;
 }
 ```
+
+---
+layout: center
+---
+
+# Serialization is slow!
+
+---
+layout: center
+---
+
+```js
+async function run() {
+  // Packaging needs access to the graphs
+  let handle = farm.createHandle("runPackaging");
+
+  // This will take a while
+  let result = await handle(bigAssGraphs);
+}
+```
+
+---
+layout: center
+class: "text-center"
+---
+
+# JS can't share memory with other threads
+
+Or can it?
+
+---
+layout: two-col
+---
+
+# SharedArrayBuffer
+
+::right::
+
+<v-clicks>
+
+- Allows memory sharing between JS worker threads 🙌
+- Data is limited to a typed array buffers 🥲
+  - Arrays of numbers for the normies
+- So pretty useless then... 🤷
+
+</v-clicks>
+
+---
+layout: center
+class: "text-center"
+---
+
+# What does a graph structure actually look like?
+
+---
+layout: two-col-header
+columnClass: "text-center"
+---
+
+## AdjacencyList
+
+::left::
+
+```mermaid
+flowchart TB
+entry.js --> react.js
+entry.js --> async.js
+async.js --> react.js
+```
+
+::right::
+
+```mermaid
+block-beta
+columns 3
+block
+  columns 1
+  nodes entry async react
+end
+space
+block
+  columns 1
+  edges
+  block:entryedges
+    columns 2
+    a["async"] b["react"]
+  end
+  block:asyncedges
+    columns 2
+    e["react"] space
+  end
+  block:reactedges
+    columns 2
+    space:2
+  end
+end
+
+entry --> entryedges
+async --> asyncedges
+react --> reactedges
+
+style nodes stroke:none,fill:none;
+style edges stroke:none,fill:none;
+```
+
+---
+layout: two-col-header
+columnClass: "text-center"
+---
+
+## AdjacencyList
+
+::left::
+
+```mermaid
+flowchart TB
+entry.js["entry.js (0)"] --> react.js["react.js (2)"]
+entry.js["entry.js (0)"] --> async.js["async.js (1)"]
+async.js["async.js (1)"] --> react.js["react.js (2)"]
+```
+
+::right::
+
+```mermaid
+block-beta
+columns 3
+block
+  columns 1
+  nodes 0 1 2
+end
+space
+block
+  columns 1
+  edges
+  block:entryedges
+    columns 2
+    a["1"] b["2"]
+  end
+  block:asyncedges
+    columns 2
+    e["2"] space
+  end
+  block:reactedges
+    columns 2
+    space:2
+  end
+end
+
+0 --> entryedges
+1 --> asyncedges
+2 --> reactedges
+
+style nodes stroke:none,fill:none;
+style edges stroke:none,fill:none;
+```
+
+---
+layout: two-col-header
+---
+
+## `@parcel/graph`
+
+::left::
+
+<v-clicks>
+
+- An AdjacencyList backed by SharedArrayBuffer and UInt32Array
+- It does this via a bespoke hash map and double linked list implementation
+- Node data is still stored as standard JS objects
+- Big improvement to worker call times and cache serialization times 🎉
+- Backs the RequestGraph, AssetGraph and BundleGraph
+
+</v-clicks>
+
+::right::
+
+```js {hide|all}
+import Graph from "@parcel/graph";
+
+let graph = new Graph();
+
+let entryNodeId = graph.addNode({ id: "entry" });
+let reactNodeId = graph.addNode({ id: "react" });
+
+graph.addEdge(entryNodeId, reactNodeId);
+```
+
+---
+layout: two-col
+---
+
+## How do we make things fast?
+
+::right::
+
+- <span v-mark="{at: 1, type: 'strike-through'}">Do the same work, but smarter</span>
+- <span v-mark="{at: 1, type: 'strike-through'}">Don't repeat work you've already done</span>
+- <span v-mark="{at: 1, type: 'strike-through'}">Do multiple things at once</span>
+- Don't do it in JavaScript
