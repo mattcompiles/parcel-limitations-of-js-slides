@@ -1502,4 +1502,68 @@ layout: two-col
 - <span v-mark="{at: 1, type: 'strike-through'}">Do the same work, but smarter</span>
 - <span v-mark="{at: 1, type: 'strike-through'}">Don't repeat work you've already done</span>
 - <span v-mark="{at: 1, type: 'strike-through'}">Do multiple things at once</span>
+
+<v-click>
+
 - Don't do it in JavaScript
+
+</v-click>
+
+---
+layout: iframe-right
+url: "https://napi.rs/"
+scale: 0.75
+---
+
+# NAPI
+
+- Allows you to call from JS into Rust easily
+- Generates the JS binding code for
+  - including types!
+
+---
+layout: two-col-header
+---
+
+# `@parcel/rust`
+
+::left::
+
+- Package of JS bindings for all our Rust code
+- Currently handles
+  - Content hashing
+  - File/dependency resolver
+  - JS transformation and symbol extraction via SWC
+  - Image optimization
+
+::right::
+
+```js
+import { transformAsync } from "@parcel/rust";
+
+// Let's let Rust handle this
+let result = transformAsync({ filename: "entry.js" });
+```
+
+---
+layout: center
+---
+
+# So what's next?
+
+---
+layout: image
+image: "./drake.jpeg"
+backgroundSize: "center"
+class: "text-center flex items-center"
+---
+
+## I'll just leave you with this
+
+---
+layout: center
+---
+
+# Thanks for listening to me ramble
+
+## Questions?
