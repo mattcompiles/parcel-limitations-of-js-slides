@@ -1237,3 +1237,70 @@ classDef valid stroke:#22c55e;
 classDef invalid stroke:#ef4444;
 class nodesA,nodesB,nodesC valid
 ```
+
+---
+layout: two-col
+---
+
+## How do we make things fast?
+
+::right::
+
+- Do the same work, but smarter
+- Don't repeat work you've already done
+- <span v-mark="{at: 1, type: 'circle'}">Do multiple things at once</span>
+
+---
+layout: two-col
+---
+
+## Opportunties for concurrency
+
+::right::
+
+- Asset transformation
+- Bundle packaging
+
+---
+layout: two-col
+---
+
+## `@parcel/workers`
+
+::right::
+
+- Can use different worker backends
+  - node worker threads
+  - processes
+  - browser web workers
+- Can spawn workers based on machine capability (CPU count)
+- Attempts to distribute work evenly between workers
+- Handles serialization/deserialization of parameters
+
+---
+layout: two-col
+---
+
+```js {all|4-6|8|all}{at:1}
+import WorkerFarm from "@parcel/workers";
+
+async function run() {
+  let farm = new WorkerFarm({
+    workerPath: require.resolve("./worker.js"),
+  });
+
+  let handle = farm.createHandle("runTransform");
+  let result = await handle("entry.js");
+}
+```
+
+::right::
+
+```js {all|1|2|all}{at:1}
+// worker.js
+export function runTransform(filePath) {
+  // Do CPU intensive work...
+
+  return result;
+}
+```
