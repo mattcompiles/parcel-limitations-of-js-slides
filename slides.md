@@ -156,7 +156,7 @@ layout: two-col-header
 
 ::right::
 
-<span class="-mt-16 Gblock">
+<span class="-mt-16 block">
 
 ```js {0|1-10|12-16|18-22|24|all}
 let moduleStore = {};
