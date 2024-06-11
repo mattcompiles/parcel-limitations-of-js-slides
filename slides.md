@@ -12,9 +12,9 @@ layout: intro
 
 # Hi, I'm Matt 👋
 
-## Work on Parcel in the App framework bundler team @ Atlassian
+## App framework bundler team @ Atlassian
 
-@mattcompiles
+@mattcompiles on Github & Twitter
 
 ---
 layout: header
@@ -38,36 +38,29 @@ layout: statement
 layout: statement
 ---
 
-## Why Parcel?
+## Why 📦 Parcel?
 
 ---
 layout: center
 ---
 
-# Flash back to 2022
+# Flash back to 2019
 
 - Atlassian is hitting the limits of Webpack
-- Jira production builds are running for over 2 hours
+  - Jira production builds are running for over 2 hours
 - There's big ideas for features that are not supported by any open source bundlers
 - Decisions is made to invest in Parcel, kicking off the Parcel V2 rewrite
 
 ---
+layout: center
+---
 
-<div class="grid grid-cols-2 gap-4 items-center h-full">
-<div>
-    
-## Jira is big
+# Jumping forward to 2023
 
-</div>
-
-<div>
-
-- TODO: Number of files in Jira
-- TODO: number of bundles in Jira
-- TODO: Size in bytes
-
-</div>
-</div>
+- Parcel is finally rolled out in the Jira codebase
+  - Reducing production build times by around 90 minutes
+- Native bundlers have become a "thing", substantially outperforming JS bundlers
+  - However none with the stability or feature completness to suit our needs
 
 ---
 layout: center
@@ -121,7 +114,7 @@ layout: two-col-header
 ::right::
 
 ```mermaid
-flowchart LR
+flowchart TB
 subgraph bundles
 main-12345.js .-> async-12345.js
 main-12345.js --> shared-12345.js
@@ -428,6 +421,38 @@ class react,C on
 layout: center
 ---
 
+# But what if you have more than 64 items in the set?
+
+---
+layout: center
+---
+
+```js {all|5|9-11,15-17|all}
+export class BitSet {
+  bits: Uint32Array;
+
+  constructor(maxBits: number) {
+    this.bits = new Uint32Array(Math.ceil(maxBits / 32));
+  }
+
+  intersect(other: BitSet) {
+    for (let i = 0; i < this.bits.length; i++) {
+      this.bits[i] &= other.bits[i];
+    }
+  }
+
+  union(other: BitSet) {
+    for (let i = 0; i < this.bits.length; i++) {
+      this.bits[i] |= other.bits[i];
+    }
+  }
+}
+```
+
+---
+layout: center
+---
+
 ```js {1-2|1-6|all}
 // Create BitSet with length of all assets array
 let assets = new BitSet(allAssets.length);
@@ -498,7 +523,7 @@ layout: header
 |                    |                                                                  |
 | ------------------ | ---------------------------------------------------------------- |
 | AssetGraphRequest  | Create an AssetGraph                                             |
-| AssetRequest       | Load a file, transform it and return an Asset                    |
+| AssetRequest       | Load a file, transform it and extract its symbols                |
 | PathRequest        | Resolve a dependency/import to a file                            |
 | BundleGraphRequest | Run bundling algorithm, tree shaking, etc. Returns a BundleGraph |
 | PackageRequest     | Render a bundle to string and run optimizations on it            |
@@ -667,15 +692,20 @@ class jt,entry,react,async,AssetGraphRequest invalid
 ```
 
 ---
-layout: center
+layout: header
+contentClass: "m-auto"
 ---
+
+## Code example
+
+::content::
 
 ```js {1,11|1,11,2|1,11,3,10|1,11,3,10,4-6|1,11,3,10,4,8-9|all}
 requestTracker.runRequest({
   id: hash(filePath, targetEnvironment),
   run: (api) => {
     // assign invalidations
-    api.invalidateOnFileChange(filePath);
+    api.invalidateOnFileChange(transformerFilePath);
     api.invalidateOnEnvChange("NODE_ENV");
 
     // run sub-request, could be cached

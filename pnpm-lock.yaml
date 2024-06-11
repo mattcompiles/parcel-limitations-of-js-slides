@@ -20,6 +20,9 @@ dependencies:
   prettier-plugin-slidev:
     specifier: ^1.0.5
     version: 1.0.5(prettier@3.3.1)
+  tm-themes:
+    specifier: ^1.4.3
+    version: 1.4.3
   vue:
     specifier: ^3.4.27
     version: 3.4.27(typescript@5.4.5)
@@ -4860,6 +4863,10 @@ packages:
       yallist: 4.0.0
     dev: false
     optional: true
+
+  /tm-themes@1.4.3:
+    resolution: {integrity: sha512-nsUGwktLaWFMyKw2e/hNyDmcTIO+ue6Q2Mvb8L7WQkKSCflOm2TjGSspcJw6q7hi4QxQQNTuGICyvQN1UqtunQ==, tarball: https://packages.atlassian.com/api/npm/npm-remote/tm-themes/-/tm-themes-1.4.3.tgz}
+    dev: false
 
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==, tarball: https://packages.atlassian.com/api/npm/npm-remote/to-fast-properties/-/to-fast-properties-2.0.0.tgz}
