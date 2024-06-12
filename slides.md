@@ -1360,8 +1360,8 @@ async function run() {
   // Packaging needs access to the graphs
   let handle = farm.createHandle("runPackaging");
 
-  // This will take a while
-  let result = await handle(bigAssGraphs);
+  // This will take a while 😬
+  let result = await handle(bigAssGraph);
 }
 ```
 
