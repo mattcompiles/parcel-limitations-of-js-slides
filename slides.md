@@ -1567,7 +1567,7 @@ layout: two-col-header
 
 <v-clicks depth="2">
 
-- An AdjacencyList backed by SharedArrayBuffer and UInt32Array
+- An AdjacencyList backed by `SharedArrayBuffer` and `UInt32Array`
 - It does this via a bespoke hash map and double linked list implementation
   - This is terrifying 🫣
 - Node data is still stored as standard JS objects
