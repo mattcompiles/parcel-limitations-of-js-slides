@@ -20,7 +20,7 @@ layout: intro
 layout: header
 ---
 
-## What are gonna talk about?
+## What are we gonna talk about?
 
 ::content::
 
