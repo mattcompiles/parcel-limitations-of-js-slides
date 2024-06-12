@@ -508,6 +508,7 @@ layout: two-col
 
 ::right::
 
+- Cacheable piece of work
 - Unique identifier
 - Can be assigned invalidations
   - files being updating/delete/created
