@@ -239,6 +239,7 @@ layout: center
 
 ---
 layout: center
+class: "text-center"
 ---
 
 # But there is one JS feature that implements intersections and unions natively!
@@ -481,6 +482,7 @@ layout: two-col
 
 ---
 layout: center
+class: "text-center"
 ---
 
 # Caching
@@ -488,10 +490,12 @@ layout: center
 A computed result that can be saved for later
 
 ---
-layout: center
+layout: two-col
 ---
 
 # Caching requires
+
+::right::
 
 - A way to identify a piece of work
 - A list of things of that could force that work to be invalidated
@@ -510,7 +514,7 @@ layout: two-col
   - environment vars changing
   - options changing
   - etc
-- Can have sub-requests
+- Can have sub-requests or nested requests
 
 ---
 layout: header
@@ -530,13 +534,18 @@ layout: header
 | etc                |                                                                  |
 
 ---
-layout: center
+layout: header
+contentClass: "text-center"
 ---
+
+## Example
+
+::content::
 
 ```mermaid
 flowchart TB
 entry.js --> react.js
-entry.js --> async.js
+entry.js .-> async.js
 async.js --> react.js
 async.js --> async.css
 ```
