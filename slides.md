@@ -1501,6 +1501,63 @@ style edges stroke:none,fill:none;
 
 ---
 layout: two-col-header
+columnClass: "text-center"
+---
+
+## AdjacencyList
+
+::left::
+
+```mermaid
+flowchart TB
+entry.js["entry.js (0)"] --> react.js["react.js (2)"]
+entry.js["entry.js (0)"] --> async.js["async.js (1)"]
+async.js["async.js (1)"] --> react.js["react.js (2)"]
+
+linkStyle 0,1 stroke:#facc15,stroke-width:2px;
+
+```
+
+::right::
+
+```mermaid
+block-beta
+columns 3
+block
+  columns 1
+  nodes 0 1 2
+end
+space
+block
+  columns 1
+  edges
+  block:entryedges
+    columns 2
+    a["1"] b["2"]
+  end
+  block:asyncedges
+    columns 2
+    e["2"] space
+  end
+  block:reactedges
+    columns 2
+    space:2
+  end
+end
+
+0 --> entryedges
+1 --> asyncedges
+2 --> reactedges
+
+style nodes stroke:none,fill:none;
+style edges stroke:none,fill:none;
+style a stroke:#facc15;
+style b stroke:#facc15;
+style 0 stroke:#facc15;
+```
+
+---
+layout: two-col-header
 ---
 
 ## `@parcel/graph`
