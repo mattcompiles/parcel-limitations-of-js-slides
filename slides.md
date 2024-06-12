@@ -1564,10 +1564,11 @@ layout: two-col-header
 
 ::left::
 
-<v-clicks>
+<v-clicks depth="2">
 
 - An AdjacencyList backed by SharedArrayBuffer and UInt32Array
 - It does this via a bespoke hash map and double linked list implementation
+  - This is terrifying 🫣
 - Node data is still stored as standard JS objects
 - Big improvement to worker call times and cache serialization times 🎉
 - Backs the RequestGraph, AssetGraph and BundleGraph
@@ -1660,6 +1661,6 @@ class: "text-center flex items-center"
 layout: center
 ---
 
-# Thanks for listening to me ramble
+# Thanks for listening to me nerd out 🤓
 
 ## Questions?
